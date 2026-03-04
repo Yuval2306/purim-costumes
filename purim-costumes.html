@@ -608,11 +608,6 @@
       <div class="name" id="selected-name"></div>
     </div>
 
-    <div class="api-key-box">
-      <label>🔑 מפתח Gemini API שלך</label>
-      <input type="password" id="api-key" placeholder="AIza..." />
-    </div>
-
     <div class="upload-area" id="upload-area">
       <input type="file" accept="image/*" onchange="handleFileUpload(this)" />
       <span class="upload-icon">📸</span>
@@ -778,13 +773,13 @@ uploadArea.addEventListener('drop', e => {
 });
 
 async function analyzeImage() {
-  const apiKey = document.getElementById('api-key').value.trim();
-  if (!apiKey) { showError('נא להכניס מפתח Gemini API'); return; }
   if (!uploadedImageBase64) { showError('נא להעלות תמונה'); return; }
+
+  // ⬇️ שים כאן את ה-URL של ה-Worker שלך אחרי שתיצור אותו
+  const WORKER_URL = "https://purim-gemini.yuvalboker588.workers.dev";
 
   hideError();
 
-  // Go to step 3
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('step-3').style.display = 'block';
   document.getElementById('step-ind-2').classList.remove('active');
@@ -816,7 +811,7 @@ async function analyzeImage() {
 כתוב בטון שמח, נלהב ומלא באנרגיית פורים! השתמש באימוג'ים.`;
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
